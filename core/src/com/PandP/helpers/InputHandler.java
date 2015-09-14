@@ -1,6 +1,7 @@
 package com.PandP.helpers;
 
 import com.PandP.gameobjects.Airplane;
+import com.PandP.gameworld.GameWorld;
 import com.badlogic.gdx.InputProcessor;
 
 /**
@@ -9,14 +10,27 @@ import com.badlogic.gdx.InputProcessor;
 public class InputHandler implements InputProcessor {
 
     private Airplane myAirplane;
+    private GameWorld myWorld;
 
-    public InputHandler(Airplane airplane){
-        myAirplane = airplane;
+    public InputHandler(GameWorld myWorld){
+        this.myWorld = myWorld;
+        myAirplane = myWorld.getAirplane();
     }
+    /*public InputHandler(Airplane airplane){
+        myAirplane = airplane;
+    }*/
 
     @Override
-    public boolean touchDown(int screenX, int sxreenY, int pointer, int button){
-       myAirplane.onClick();
+    public boolean touchDown(int screenX, int screenY, int pointer, int button){
+       if (myWorld.isReady()){
+           myWorld.start();
+       }
+        myAirplane.onClick();
+
+       if (myWorld.isGameOver() || myWorld.isHighScore()){
+           myWorld.restart();
+       }
+
        return true;
     }
 
@@ -54,4 +68,6 @@ public class InputHandler implements InputProcessor {
     public boolean scrolled(int amount){    //проверить потом снести нах
         return false;
     }
+
+
 }
